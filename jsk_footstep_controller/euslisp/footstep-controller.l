@@ -24,7 +24,8 @@
           (send arr :footsteps)))
 (defun print-readable-coords (coords)
   (dolist (c coords)
-    (format t "(make-coords :pos ~A :rpy ~A)~%"
+    (format t "(make-coords :name ~A :pos ~A :rpy ~A)~%"
+            (send c :name)
             (send c :worldpos)
             (car (send c :rpy-angle)))))
 
@@ -34,6 +35,11 @@
     (ros::publish "/footstep_goal" footstep)
     ;; footstep := jsk_recognition_msgs/FootstepArray
     (let ((footstep-coords (footstep-array->coords footstep)))
+      ;; fix footstep by feed-forward error model
+      ;; (dolist (i (length footstep-coords))
+      ;;   (send-all (subseq footstep-coords i (length footstep-coords)) 
+      ;;             :translate (float-vector -10 0 0))
+      ;;   )
       (print-readable-coords footstep-coords)
       (send *ri* :set-foot-steps footstep-coords)
       (send server :set-succeeded (send server :result))

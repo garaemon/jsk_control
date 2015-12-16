@@ -52,10 +52,23 @@
   (send req :response))
 
 (defun reset-walking-pose-callback (req)
+  (send *ri* :set-gait-generator-param
+        :stair-trajectory-way-point-offset #f(0.03 -0.0 0)
+        :swing-trajectory-delay-time-offset 0.25
+        :default-orbit-type :stair
+        :default-step-time 1.7
+;;        :default-step-time 2.2
+        :default-double-support-ratio 0.16
+        :default-step-height 0.03)
+  (send *ri* :set-auto-balancer-param :default-zmp-offsets (list (float-vector 5 10 0) (float-vector 5 -10 0)))
+  (send *ri* :set-gait-generator-param :default-step-height 0.14)
+  (send *ri* :start-auto-balancer)
   (send *robot* :reset-pose)
-  (walking-pose *robot* :root-link-height-offset -40
+  ;;(walking-pose *robot* :root-link-height-offset -40
+  (walking-pose *robot* :root-link-height-offset -90
                 :head-link-pitch-offset 35)
-  (send *ri* :angle-vector (send *robot* :angle-vector) 3000)
+  (send *ri* :angle-vector (send *robot* :angle-vector) 10000)
+  ;; set autobalancer parameters
   (send req :response))
 
 (defun start-abc-callback (req)
@@ -65,4 +78,6 @@
 (ros::advertise-service "/footstep_command/reset_walking_pose" std_srvs::Empty #'reset-walking-pose-callback)
 (ros::advertise-service "/footstep_command/reset_pose" std_srvs::Empty #'reset-pose-callback)
 (ros::advertise-service "/footstep_command/start_abc" std_srvs::Empty #'start-abc-callback)
-(ros::spin)
+;;(ros::spin)
+;; (load "package://jsk_footstep_controller/euslisp/gui-client.l")
+

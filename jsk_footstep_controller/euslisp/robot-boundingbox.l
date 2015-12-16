@@ -121,6 +121,6 @@
 (ros::advertise "/robot_bbox_array" jsk_recognition_msgs::BoundingBoxArray) ;for visualization
 (ros::subscribe "/joint_states" sensor_msgs::JointState #'joint-states-callback)
 
-(ros::rate 10)
+(ros::rate 1)
 (ros::spin)
 
