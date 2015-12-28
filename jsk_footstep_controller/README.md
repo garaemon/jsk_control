@@ -2,7 +2,6 @@
 
 
 ## footcoords
-![footcoords.png](images/footcoords.png)
 ![jaxon_odom_init.png](images/jaxon_odom_init.png)
 
 footcoords publishes three tf frames usefule for biped robots.
@@ -18,6 +17,13 @@ both of `lfsensor` and `rfsensor` provides enough force (the threshold is `~forc
 
    footcoords computes transformation only if these two topic get the
    same timestamp.
+
+* `/odom` (`nav_msgs/Odometry`)
+
+   footcoords converts this topic to odom tf frame.
+* `/imu` (`sensor_msgs/Imu`)
+
+   footcoords listens imu topic to use orientation as odometry orientation.
 
 #### Publishing Topics
 * `/tf` (`tf2_msgs/TFMessage`)
@@ -47,3 +53,11 @@ both of `lfsensor` and `rfsensor` provides enough force (the threshold is `~forc
 
 * `~invert_odom_init` (Bool, default: `true`)
    Broadcast tf of odom_init as parent of odom if `~invert_odom_init` is true (odom_init -> odom).
+
+* `~use_imu` (Bool, default: `false`)
+
+  Use imu orientation as odom orientation.
+
+* `~use_imy_yaw` (Bool, default: `true`)
+
+  Use yaw angle of imu orientation as odom yaw orientation.
